@@ -616,6 +616,27 @@
         .scrollmargin {
         scroll-margin-top: 80px;
         }
+
+        /* Video container responsive styles */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -700,12 +721,17 @@
                         </div>
                     </div>
                     <div class="hero-preview">
-                        <div class="preview-title">Vista Previa Bridge & Contribution / Preview</div>
-                        <div class="preview-placeholder">
-                            <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
-                            <div>Área de vista previa del gráfico Bridge</div>
+                        <div class="preview-title">Tutorial en Video de JoySight</div>
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/pOvH9K3yOjI" 
+                                title="Video Tutorial de JoySight" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                            </iframe>
                         </div>
-                        <div class="preview-note">El gráfico anterior es ilustrativo, puede ser reemplazado por su captura de pantalla o animación.</div>
+                        <div class="preview-note">Ve el video tutorial para aprender cómo usar JoySight para análisis de datos.</div>
                     </div>
                 </div>
             </div>
