@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoySight - Herramienta de Análisis Inteligente de Datos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header and Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .language-switch {
+            background: #667eea !important;
+            color: white !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .language-switch:hover {
+            background: #5a6fd8 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* Language Dropdown Styles */
+        .language-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-toggle:hover {
+            color: #555;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0 0 0;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            border: 1px solid #e9ecef;
+        }
+
+        .language-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: #333 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-menu a:hover {
+            background: #667eea !important;
+            color: white !important;
+        }
+
+        /* Mobile responsiveness for dropdown */
+        @media (max-width: 768px) {
+            .language-dropdown {
+                display: none;
+            }
+        }
+        
+        /* Main Content */
+        main {
+            background: white;
+            margin-top: 80px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem 0;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .hero-text {
+            text-align: left;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .cta-button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        .cta-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+        }
+        
+        .cta-primary:hover {
+            background: #3367d6;
+        }
+        
+        .cta-secondary {
+            background: #333;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cta-secondary:hover {
+            background: #555;
+        }
+        
+        .hero-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .preview-title {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .preview-placeholder {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .preview-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        /* Sections */
+        section {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #667eea;
+            margin: 1rem auto;
+        }
+        
+        /* Problem Section */
+        .problem-section {
+            background: #f8f9fa;
+        }
+        
+        .dialogue {
+            background: white;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .speaker {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .internal-thought {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 0;
+            font-style: italic;
+            border-radius: 10px;
+        }
+        
+        /* Instructions Section */
+        .instructions {
+            background: white;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .sub-section {
+            margin: 1.5rem 0;
+            padding-left: 0;
+        }
+        
+        .sub-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1.5rem 0 0.8rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid #667eea;
+        }
+        
+        .sub-content {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .detail-item {
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+        }
+        
+        .detail-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-description {
+            margin-left: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .data-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .data-type-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .data-type-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-type-title {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Example Buttons */
+        .example-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem 0;
+            transition: background 0.3s ease;
+        }
+        
+        .example-btn:hover {
+            background: #218838;
+        }
+        
+        .example-content {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 5px;
+        }
+        
+        .example-content.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 200px;
+            }
+        }
+        
+        /* Rules Section */
+        .rules-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .rules-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .rules-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .rules-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .rules-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* Features Section */
+        .features {
+            background: #f8f9fa;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .data-types {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Control del tamaño de imágenes */
+        /* Limitar el ancho máximo del contenedor y centrarlo en pantalla grande */
+        .step-screenshot { max-width: 1000px; margin: 1rem 0; }
+        /* La imagen nunca excede el contenedor y mantiene las proporciones */
+        .step-screenshot img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .step-screenshot img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Establecer ancho máximo para imágenes específicas */
+        img.picture_max_width {
+        max-width: 600px;
+        }
+
+        /* Establecer ancho máximo para imágenes específicas */
+        img.picture_max_width_400 {
+        max-width: 400px;
+        }
+        
+        /* Estilos del visor de imágenes a pantalla completa */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+        
+        .fullscreen-image {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            transition: color 0.3s ease;
+        }
+        
+        .close-button:hover {
+            color: #ccc;
+        }
+
+        .scrollmargin {
+        scroll-margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Visor de imágenes a pantalla completa -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <span class="close-button" id="closeButton">&times;</span>
+        <img class="fullscreen-image" id="fullscreenImage" src="" alt="">
+    </div>
+    <header>
+        <nav class="container">
+            <div class="logo" id = "error-workbook-path-mismatch"
+            id = "error-excel-instance"
+            id = "error-workbook-open"
+            id = "error-worksheet-missing"
+            id = "error-data-copy"
+            id = "error-bridge-data-clear"
+            id = "error-worksheet-selection"
+            id = "error-excel-settings-restore"
+            id = "error-worksheet-restoration"
+            id = "error-screen-updating"
+            id = "error-interactive-restore"
+            id = "error-formula-parsing"
+            id = "error-variable-processing"
+            id = "error-pivot-table"
+            id = "error-data-range"
+            id = "error-cell-reference"
+            id = "error-range-values"
+            id = "error-worksheet-hide"
+            id = "error-worksheet-delete"
+            id = "error-worksheet-create"
+            id = "error-worksheet-copy"
+            id = "error-pastespecial" 
+            id = "error-refresh-bridge-general"
+            id = "error-refresh-bridge-data"
+            id = "error-refresh-bridge-process"
+            id = "error-general-exception"
+            id = "error-com-object-release"
+            id = "error-memory-cleanup"
+            id = "error-drop-list-create"
+
+            >JoySight</div>
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#problem">Casos de Uso</a></li>
+                <li><a href="#instructions">Guía</a></li>
+                <li><a href="#data-worksheet">Tipos de Datos</a></li>
+                <li><a href="#rules">Reglas</a></li>
+                <li><a href="#process">Cálculos</a></li>
+                <li><a href="#transparency-analysis">Características</a></li>
+                <li class="language-dropdown">
+                    <div class="dropdown-toggle">
+                        <span>Language</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="../index.html">English</a></li>
+                        <li><a href="../zh/index.html">中文</a></li>
+                        <li><a href="../jp/index.html">日本語</a></li>
+                        <li><a href="index.html">Español</a></li>
+                        <li><a href="../fr/index.html">Français</a></li>
+                        <li><a href="../pt/index.html">Português</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero scrollmargin">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>JoySight – Descubra automáticamente los factores clave de impulso en análisis financiero, marketing, big data y otros campos</h1>
+                        <p class="subtitle">Complete el desglose en minutos, genere análisis Bridge y de contribución con un proceso transparente y trazable.</p>
+                        <div class="cta-buttons">
+                            <a href="#instructions" class="cta-button cta-primary">Comenzar</a>
+                            <a href="#problem" class="cta-button cta-primary">Casos de Uso</a>
+                            <a href="#" class="cta-button cta-secondary">
+                                <span>🏪</span> Descargar Microsoft Store
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-preview">
+                        <div class="preview-title">Vista Previa Bridge & Contribution / Preview</div>
+                        <div class="preview-placeholder">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                            <div>Área de vista previa del gráfico Bridge</div>
+                        </div>
+                        <div class="preview-note">El gráfico anterior es ilustrativo, puede ser reemplazado por su captura de pantalla o animación.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section id="problem" class="problem-section">
+            <div class="container">
+                <h2 class="section-title">Casos de Uso</h2>
+                
+                <div class="dialogue">
+                    <div class="speaker">¿Se encuentra frecuentemente con problemas similares a los siguientes?</div>
+                    
+                    <div class="conversation">
+                        <div class="speaker">Jefe:</div>
+                        <p>¿Cómo está el rendimiento de la rentabilidad de estos últimos trimestres?</p>
+                        
+                        <div class="speaker">Usted:</div>
+                        <p>Las ventas han crecido un 10%, pero el margen de beneficio ha bajado 7pt en general.</p>
+                        
+                        <div class="speaker">Jefe:</div>
+                        <p>Eso no está muy bien. ¿Podrías darme un desglose de la caída de 7pt del margen de beneficio y un informe de análisis? Necesito saber qué productos específicos y qué razones causaron esta caída. Sería mejor hacer un análisis integral similar por región, tipo de producto, canal de distribución, equipo u otras dimensiones, y comparar con diferentes períodos como el año pasado, el año anterior, o nuestro presupuesto. Así podremos detectar problemas oportunamente y resolverlos de inmediato.</p>
+                        
+                        <div class="internal-thought">
+                            <div class="speaker">Usted (pensamiento interno):</div>
+                            <p>Si fuera un análisis de ingresos sería simple, pero desglosar la caída de 7pt del margen de beneficio hasta 1000 SKUs específicos, y saber cuáles factores como precio, tasa de descuento, costos, etc., contribuyeron cuántos puntos porcentuales a la caída total, no es fácil. Si agregamos análisis por región, tipo de producto, canales, y comparaciones con el año pasado, presupuesto y otras versiones de datos diferentes, se vuelve aún más complejo, casi imposible...</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <p><strong>¿Se encuentra frecuentemente con demandas similares en el trabajo?</strong> ¿Pasa un día entero, o varios días o incluso más tiempo (análisis de diferentes dimensiones) para obtener una conclusión de análisis? ¿Este análisis contiene una gran cantidad de estimaciones manuales, y al final la suma de todos los factores de influencia para la caída del margen de beneficio no es exactamente 7pt, teniendo que hacer ajustes manuales, y siempre mantiene la duda sobre si el proceso de cálculo es 100% correcto?</p>
+                        
+                        <p><strong>Use JoySight, complete este tipo de análisis en minutos</strong>, obtenga resultados de análisis precisos mediante algoritmos, y desglose los cambios de ingresos, márgenes de beneficio, etc., según los factores de influencia, diferentes dimensiones y comparaciones de escenarios que desee. Identifique con precisión dónde están los problemas, actúe oportunamente y mejore la competitividad empresarial.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section id="instructions" class="instructions">
+            <div class="container">
+                <h2 class="section-title">Guía</h2>
+                <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">El uso de la herramienta JoySight requiere tener Excel 2016 o superior preinstalado. Se recomienda usar la última versión de Microsoft 365, las versiones más antiguas pueden causar que el programa no funcione correctamente.</p>
+                <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">Las siguientes instrucciones utilizan un conjunto de datos virtuales de "supermercado simulado" para demostrar cómo usar la herramienta JoySight para generar automáticamente análisis Bridge y obtener factores de impulso clave.</p>
+                <a href="../assets/Test.xlsx" download>Descargar ejemplo de Excel</a>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Operaciones del panel inicial</strong>
+                    <p>El panel inicial muestra dos botones "Nuevo archivo Bridge" y "Abrir archivo Bridge existente"</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/1.1_Initial_Panel.png" alt="Captura de pantalla de la interfaz después de hacer clic en Nuevo archivo Bridge">
+                    </figure>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p><strong>1.1</strong> Hacer clic en el botón "Nuevo archivo Bridge" - genera un nuevo archivo de Excel que contiene una nueva hoja de cálculo "Data". Por favor, ingrese los datos correspondientes en la hoja "Data" y úsela como base para análisis posteriores.</p>
+                    </div>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p><strong>1.2</strong> Hacer clic en el botón "Abrir archivo Bridge existente" - selecciona un archivo de Excel usado previamente. Este archivo debe guardar los datos correspondientes y tener configurados los Tipos de Datos.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong class="sub-title scrollmargin" id="data-worksheet">Hoja Data</strong>
+                    <p>En la hoja Data, comenzando desde la columna B, ingrese los <a href="#data-type-selection">tipos de datos</a> en la primera fila, los <a href="#file-name-input">nombres de campos</a> en la segunda fila, y los <a href="#data-input">datos</a> desde la tercera fila hacia abajo. La columna A contiene las descripciones de identificación generadas automáticamente para la entrada de datos de las filas uno a tres, la columna A en sí no afecta los datos ni el análisis.</p>
+                    <figure class="step-screenshot">
+                        <img src="../images/2_Data_Worksheet.png" alt="Hoja Data">
+                    </figure>
+
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="data-type-selection">2.1 Selección de tipo de datos</div>
+                        <div class="sub-content">
+                            <p>En el menú desplegable generado en la primera fila de la hoja "Data", comenzando desde la columna B, seleccione el tipo de datos. El tipo se determina según el significado que los datos necesitan representar. El programa realizará análisis automático basado en el tipo de datos.</p>
+                            
+                            <p>Los tipos de datos se dividen en 5 categorías: <a href="#dimension">Dimension</a>, <a href="#key">Key</a>, <a href="#sumy">SumY</a>, <a href="#sumn">SumN</a>, <a href="#result">Result</a>. Cada campo debe definir un tipo de datos, puede usar el menú desplegable para seleccionar el tipo de datos.</p>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1_Data_Type_Select.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                            <p>Ahora, tomando como ejemplo los datos de nuestro supermercado simulado, expliquemos el significado de cada tipo de datos, las definiciones de cada tipo son las siguientes:</p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="dimension">2.1.1 Dimension</div>
+                            <div class="detail-description">
+                                Representa las dimensiones de los datos, por ejemplo fechas, tiempo, regiones y otras dimensiones y facetas de datos. Estos campos no participan en el cálculo, solo se usan para filtrar datos.
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.1_Dimension.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="key">2.1.2 Key</div>
+                            <div class="detail-description">
+                                Key es un tipo de Dimension, solo un campo puede ser marcado como Key. El campo marcado como Key servirá como la granularidad mínima para el análisis y calculará el impacto de cada factor en el resultado final (Result) en esta dimensión. Puede cambiar otras dimensiones al campo Key para análisis en diferentes granularidades.
+                                <br><br>
+                                <strong>Por ejemplo:</strong> Si selecciona "Nombre del Producto" como Key, el programa calculará el impacto del cambio de cada variable en esta dimensión "Nombre del Producto" sobre el resultado final (Result).
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.2_Key.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="sumy">2.1.3 SumY</div>
+                            <div class="detail-description">
+                                Los datos del mismo campo de columna pueden sumarse entre diferentes filas y los datos sumados tienen significado. La configuración correcta de SumY o SumN afectará los resultados del análisis final.
+                                <br><br>
+                                <strong>Por ejemplo:</strong> Las Cantidades de diferentes productos de cada fila pueden sumarse, el significado después de la suma es la cantidad total de mercancías. Por lo tanto, el Tipo de Cantidad puede configurarse como SumY.
+                                <br><br>
+                                SumY puede ingresar valores numéricos directamente, o usar fórmulas para calcular valores a través de otros campos. Pero las fórmulas solo pueden usar los símbolos de operaciones aritméticas básicas de Excel y paréntesis, es decir: suma +, resta -, multiplicación *, división /, paréntesis izquierdo "(", paréntesis derecho ")". <a href="#formula-usage-tips">Consejos de uso de fórmulas</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.3_SumY.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="sumn">2.1.4 SumN</div>
+                            <div class="detail-description">
+                                Los datos del mismo campo de columna no pueden sumarse entre diferentes filas y los datos sumados no tienen significado. La configuración correcta de SumY o SumN afectará los resultados del análisis final.
+                                <br><br>
+                                <strong>Por ejemplo:</strong> Los Precios de diferentes productos no son iguales, si se quiere calcular el Precio promedio de todos los productos, no se puede sumar directamente el Precio del producto A y el Precio del producto B para obtener el Precio general. Por lo tanto, el Tipo de Precio puede configurarse como SumN.
+                                <br><br>
+                                SumN puede ingresar valores numéricos directamente, o usar fórmulas para calcular valores a través de otros campos. Pero las fórmulas solo pueden usar los símbolos de operaciones aritméticas básicas de Excel y paréntesis, es decir: suma +, resta -, multiplicación *, división /, paréntesis izquierdo "(", paréntesis derecho ")". <a href="#formula-usage-tips">Consejos de uso de fórmulas</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.4_SumN.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="result">2.1.5 Result</div>
+                            <div class="detail-description">
+                                Solo un campo puede ser seleccionado como Result para servir como el resultado de datos que necesitamos analizar. Esta columna Result debe ingresar fórmulas, calculando el campo Result a través de otras variables.
+                                <br><br>
+                                <strong>Por ejemplo:</strong> Si el contenido del campo Result es ventas, entonces la celda necesita ingresar = Precio * Cantidad. O si es margen%, entonces la celda necesita ingresar =beneficio / ingresos.
+                                <br><br>
+                                La fórmula en Result es información importante que el programa usa para asociar variables y resultados, y dependencia lógica de análisis. Asegúrese de que cada celda Result de cada fila contenga una fórmula que pueda calcular el Result, la fórmula debe ser concisa y clara. Result analizará el impacto de cada variable en la fórmula sobre Result, las variables que no estén en la fórmula no están en el alcance del análisis. La fórmula Result debe contener al menos un campo cuyo Tipo de Datos sea SumY, para poder agregar y analizar datos de diferentes filas.
+                                <br><br>
+                                Las fórmulas Result solo pueden usar los símbolos de operaciones aritméticas básicas de Excel y paréntesis, es decir: suma +, resta -, multiplicación *, división /, paréntesis izquierdo "(", paréntesis derecho ")". <a href="#formula-usage-tips">Consejos de uso de fórmulas</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.5_Result.png" alt="Seleccionar tipo de datos">
+                            </figure>
+                        </div>
+                    </div>
+
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="file-name-input">2.2 Configuración de nombres de campos</div>
+                        <div class="sub-content">
+                            <p>En la segunda fila de la hoja "Data", comenzando desde la columna B hacia la derecha, ingrese los nombres de campos. El significado de los datos representados por los nombres de campos debe corresponder a los <a href="#data-type-selection">tipos de datos</a> de la primera fila. Los nombres de campos no pueden duplicarse.</p>
+                        </div>
+                        <figure class="step-screenshot">
+                            <img src="../images/2.2_Field_Name.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="data-input">2.3 Entrada de datos</div>
+                        <div class="sub-content">
+                            <p>En la hoja "Bridge Data", desde la columna B, tercera fila hacia abajo, ingrese los datos específicos.</p>
+                        </div>
+                    </div>
+                    <figure class="step-screenshot">
+                        <img src="../images/2.3_Data_Input.png" alt="Seleccionar tipo de datos">
+                    </figure>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Operaciones de botones Bridge</strong>
+                    <p>Cuando haga clic en "New Bridge File" o "Select Bridge File" para abrir el archivo, aparecerán en el panel los botones azules <a href="#new-bridge">New Bridge</a> y <a href="#refresh-bridge">Refresh Bridge</a>.</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/3_Bridge_Button.png" alt="Captura de pantalla de la interfaz después de hacer clic en Nuevo archivo Bridge">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>3.1</strong> Botón <a class="sub-title scrollmargin" id="new-bridge">New Bridge</a> - genera nuevos <a href="#dropdown-menu">menús desplegables</a> y hojas Bridge y otros marcos de análisis basados en los datos de la hoja Data, para análisis posterior de datos. (Nota: las hojas de cálculo relacionadas como la hoja Bridge y los datos correspondientes en el libro de trabajo original serán eliminados.) Si los datos de la hoja Data tienen cambios, primero debe presionar el botón "New Bridge" para generar un nuevo marco de análisis, luego: 1. Seleccionar los nuevos menús desplegables Baseline y Comparison; 2. Presionar el botón "Refresh Bridge" para regenerar los gráficos Bridge y análisis de Contribution necesarios.</p>
+                    </div>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">                       
+                        <p><strong>3.2</strong> Botón <a class="sub-title scrollmargin" id="refresh-bridge">Refresh Bridge</a> - después de seleccionar las opciones en los menús desplegables <a href="#base-dropdown-menu">Baseline</a> y <a href="#target-dropdown-menu">Comparison</a> según las necesidades de análisis, presione el botón "Refresh Bridge" para generar los gráficos Bridge y análisis de Contribution necesarios. Se mostrarán avisos de datos faltantes o hojas de cálculo, se recomienda hacer clic en New Bridge para regenerar un nuevo Bridge.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong class="sub-title scrollmargin" id="dropdown-menu">Menús desplegables</strong>
+                    <p>Los menús desplegables se dividirán en dos áreas: <a href="#base-dropdown-menu">Baseline</a> y <a href="#target-dropdown-menu">Comparison</a></p>
+                    <p>Los campos en los menús desplegables Baseline y Comparison contienen exactamente las mismas opciones. Los usuarios pueden filtrar según las necesidades en los menús desplegables qué opciones sirven como datos Baseline y qué opciones sirven como datos Comparison, usándolos como datos de comparación y análisis de ambos extremos del Bridge. Nota: Inicialmente por defecto, los campos de los menús desplegables Baseline y Comparison están todos seleccionados, por lo tanto Baseline y Comparison obtienen exactamente el mismo conjunto de datos, resultando en un Bridge sin diferencias.</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/4_Dropdown_List.png" alt="Seleccionar tipo de datos">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>4.1</strong> Menú desplegable <a class="sub-title scrollmargin" id="base-dropdown-menu">Baseline</a> - selecciona los datos base para la comparación de análisis, por ejemplo, a menudo usamos datos de cierto año como base de comparación, entonces aquí seleccione 2023</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/4.1_Dropdown_List_Base.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                        <p><strong>4.2</strong> Menú desplegable <a class="sub-title scrollmargin" id="target-dropdown-menu">Comparison</a> - selecciona los datos objetivo para la comparación de análisis, por ejemplo, aquí seleccione 2024 como el año de interés para comparar con 2023.</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/4.2_Dropdown_List_Target.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Hoja Bridge</strong>
+                    <p>La hoja Bridge es la hoja de cálculo que muestra los resultados del análisis final, incluyendo el gráfico Bridge y la tabla de análisis Contribution</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/5_Bridge_WorkSheet.png" alt="Seleccionar tipo de datos">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>5.1</strong> Fuente de datos Bridge - Comenzando desde la celda B3 en la esquina superior izquierda, aparecerán nombres de campos y datos, estos son los datos utilizados para generar el gráfico Bridge.</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width_400" src="../images/5.1_Bridge_DataSource.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                        <p><strong class="sub-title scrollmargin" id="Bridge_Chart" >5.2</strong> Gráfico Bridge - Muestra el Bridge obtenido del análisis después de ejecutar el programa, la columna azul de la izquierda es Baseline, en el centro está el impacto de contribución de cada variable, la columna gráfica de la derecha es Comparison.</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/5.2_Bridge_Chart.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                        <p><strong class="sub-title scrollmargin" id="Contribution_Analysis">5.3</strong> Tabla de análisis Contribution - Directamente debajo del gráfico Bridge, se mostrará la tabla de análisis Contribution, que muestra para cada Item del campo Key, la contribución al cambio general bajo diferentes factores.</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/5.3_Contribution Analysis_Table.png" alt="Seleccionar tipo de datos">
+                        </figure>
+                        <p>A través del <a href="#Bridge_Chart">gráfico Bridge</a> y la <a href="#Contribution_Analysis">tabla de análisis Contribution</a>, podrá encontrar rápidamente los Items (SKU) más importantes que afectan los cambios, así como los factores de cambio (¿precio? ¿costo? ¿o mezcla de cantidades?)</p>
+                        <br>
+                        <p>Puede modificar en <a href="#data-type-selection">2.1 Selección de tipo de datos</a>, seleccionar qué campo es Key, qué campo es Result, para analizar diferentes dimensiones y diferentes datos de resultado. Y según los menús desplegables 3 para filtrar qué datos sirven como Baseline y Comparison, hacer clic en <a href="#refresh-bridge">Refresh Bridge</a> para generar gráficos Bridge actualizados y tablas de análisis Contribution, para analizar la situación empresarial real y proponer sugerencias de mejora</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules Section -->
+        <section id="rules" class="instructions">
+            <div class="container">
+                <h2 class="section-title">6. Reglas de Cálculo SumY y SumN</h2>
+                
+                <p style="margin-bottom: 2rem;">En la primera fila <a href="#data-type-selection">Tipo de Datos</a> de la <a href="#data-worksheet">hoja Data</a>, los valores numéricos se dividen en dos tipos <a href="#sumy">SumY</a> y <a href="#sumn">SumN</a>, y utilizan estos datos en la columna <a href="#result">Result</a> que contiene fórmulas. Para analizar correctamente los datos, aquí definimos algunas reglas de cálculo sobre SumY y SumN:</p>
+                
+                <div class="step">
+                    <span class="step-number">6.1</span>
+                    <strong>Suma (resta)</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY + SumY = SumY</p>
+                        <p>SumY + SumN (mostrará error)</p>
+                        <p>SumN + SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.2</span>
+                    <strong>Multiplicación</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY * SumY = SumY</p>
+                        <p>SumY * SumN = SumY</p>
+                        <p>SumN * SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.3</span>
+                    <strong>División</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY / SumY = SumN</p>
+                        <p>SumY / SumN = SumY</p>
+                        <p>SumN / SumY = SumN</p>
+                        <p>SumN / SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.4</span>
+                    <strong class="scrollmargin" id="formula-usage-tips">Cómo usar las fórmulas</strong>
+
+                    <div class="detail-item">
+                        <strong>Consejos de uso de fórmulas:</strong> Las fórmulas en cada celda SumY, SumN, Result solo pueden usar otros datos de la misma fila de la misma hoja de cálculo, las fórmulas no pueden incluir datos entre filas. Las fórmulas solo pueden usar los símbolos de operaciones aritméticas básicas de Excel y paréntesis, es decir: suma +, resta -, multiplicación *, división /, paréntesis izquierdo "(", paréntesis derecho ")".
+                        <br><br>
+                        <strong>Usar la misma fórmula para cada columna:</strong> El programa copiará automáticamente la fórmula de la fila 4 después de eliminar el símbolo de celda fija "$" en toda la columna, para asegurar que las fórmulas de cada columna sean las mismas.
+                    </div>
+
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>6.4.1</strong> En las fórmulas, si se incluyen paréntesis, entonces según las reglas de las cuatro operaciones aritméticas, calcular primero los datos dentro de los paréntesis, el resultado sirve como valor y aplica las reglas anteriores para continuar el cálculo.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('bracket-example')">Ver ejemplo de cálculo con paréntesis</button>
+                        <div id="bracket-example" class="example-content">
+                            <p><strong>Ejemplo:</strong> (SumY + SumY) * SumN</p>
+                            <p>Paso 1: SumY + SumY = SumY</p>
+                            <p>Paso 2: SumY * SumN = SumY</p>
+                            <p>Tipo de resultado final: SumY</p>
+                        </div>
+                        
+                        <p><strong>6.4.2</strong> Si la fórmula de la columna Result hace referencia a otras celdas y esa celda también contiene una fórmula, entonces el análisis fusionará todas las fórmulas anidadas referenciadas en una fórmula para análisis.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('nested-example')">Ver ejemplo de fórmulas anidadas</button>
+                        <div id="nested-example" class="example-content">
+                            <p><strong>Ejemplo:</strong></p>
+                            <p>Fórmula columna E: =B*C (Costo Total = Cantidad * Costo Unitario)</p>
+                            <p>Fórmula columna F Result: =D-E (Beneficio = Ingresos - Costo Total)</p>
+                            <p><strong>Después de fusionar:</strong> El programa analizará =D-(B*C)</p>
+                        </div>
+                        
+                        <p><strong>6.4.3</strong> El programa reorganizará automáticamente las variables y utilizará la propiedad distributiva de la multiplicación según la estructura de la fórmula, esto es para un mejor análisis de datos.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('reorder-example')">Ver ejemplo de reorganización de variables</button>
+                        <div id="reorder-example" class="example-content">
+                            <p><strong>Fórmula original:</strong> =SumY*(SumN1 + SumN2)</p>
+                            <p><strong>Después del procesamiento del programa:</strong> =SumY*SumN1 + SumY*SumN2</p>
+                            <p>Esto ayuda a analizar más claramente las contribuciones respectivas de SumY, SumN1, SumN2.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section id="process" class="instructions">
+            <div class="container">
+                <h2 class="section-title">7. Hoja Process</h2>
+                
+                <p style="margin-bottom: 2rem;">La hoja Process contiene la lógica y algoritmos de generación de gráficos Bridge y datos, puede ver intuitivamente cómo se calculan estos resultados de análisis paso a paso, evitando fenómenos de caja negra e inexplicables.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>Lógica y principio de cálculo del análisis Bridge</strong></p>
+                
+                <div class="step">
+                    <span class="step-number">7.1</span>
+                    <strong>Pasos de cálculo básico</strong>
+                    <p>Todas las variables se basan en los valores iniciales Baseline, cada paso cambia una variable al valor Comparison, calculando el impacto en cada Item Key.</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('step-by-step-example')">Ver ejemplo de cálculo paso a paso</button>
+                    <div id="step-by-step-example" class="example-content">
+                        <p><strong>Ejemplo:</strong> Análisis de ventas del producto A</p>
+                        <p><strong>Baseline:</strong> Precio=10, Cantidad=100, Ventas=1000</p>
+                        <p><strong>Comparison:</strong> Precio=12, Cantidad=80, Ventas=960</p>
+                        <p><strong>Paso 1:</strong> Solo cambiar Precio: 10→12, Cantidad mantiene 100, Ventas=1200</p>
+                        <p><strong>Paso 2:</strong> Luego cambiar Cantidad: Precio=12, Cantidad=100→80, Ventas=960</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.2</span>
+                    <strong>Cálculo de impacto agregado</strong>
+                    <p>Calcular el impacto en el agregado de cada cambio de variable en cada paso</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('summary-impact-example')">Ver ejemplo de impacto agregado</button>
+                    <div id="summary-impact-example" class="example-content">
+                        <p><strong>Impacto del Precio:</strong> 1200 - 1000 = +200</p>
+                        <p><strong>Impacto de la Cantidad:</strong> 960 - 1200 = -240</p>
+                        <p><strong>Cambio total:</strong> +200 + (-240) = -40</p>
+                        <p><strong>Verificación:</strong> 960 - 1000 = -40 ✓</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.3</span>
+                    <strong>Generación del gráfico Bridge</strong>
+                    <p>Después de 7.1 a 7.2, reemplazar todas las variables de los valores Baseline a los valores Comparison, se obtiene el impacto de cada factor de influencia necesario para el gráfico Bridge.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.4</span>
+                    <strong>Análisis Contribution</strong>
+                    <p>En la tabla de cálculo Contribution se calculará el impacto de cada Key en cada cambio de factor sobre el conjunto.</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('contribution-example')">Ver ejemplo de análisis Contribution</button>
+                    <div id="contribution-example" class="example-content">
+                        <p><strong>Impacto general del Precio:</strong> +500</p>
+                        <p><strong>Contribución del producto A:</strong> +200 (representa 40%)</p>
+                        <p><strong>Contribución del producto B:</strong> +180 (representa 36%)</p>
+                        <p><strong>Contribución del producto C:</strong> +120 (representa 24%)</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.5</span>
+                    <strong>Added Data y Removed Data</strong>
+                    <p>Added Data representa los nuevos datos agregados a los datos Baseline (existen en los datos Comparison), Removed Data representa los datos eliminados de los datos Baseline (no existen en Comparison). Estos dos tipos de datos generalmente necesitan ser separados primero del análisis de otros factores.</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('add-remove-example')">Ver ejemplo de Added/Removed Data</button>
+                    <div id="add-remove-example" class="example-content">
+                        <p><strong>Escenario:</strong> Análisis de cambio de combinación de productos</p>
+                        <p><strong>Datos Baseline:</strong> Productos A, B, C</p>
+                        <p><strong>Datos Comparison:</strong> Productos A, B, D (agregar D, eliminar C)</p>
+                        <p><strong>Added Data:</strong> Contribución del producto D</p>
+                        <p><strong>Removed Data:</strong> Impacto del producto C (contribución negativa)</p>
+                        <p>Estos cambios se mostrarán por separado, sin mezclarse con factores como precio, cantidad, etc.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Other Features Section -->
+        <section id="features" class="instructions">
+            <div class="container">
+                <h2 class="section-title">8. Otras hojas de cálculo</h2>
+                <p style="margin-bottom: 2rem;">Para el correcto funcionamiento del programa, se generarán algunas otras hojas de cálculo pero estarán ocultas, por favor no modifique estas hojas.</p>
+                
+                <h2 class="section-title">9. Garantía de seguridad de datos</h2>
+                <p style="margin-bottom: 2rem;">Todos los datos existen solo en el Excel local, el programa también funciona solo localmente, el análisis del programa en sí no tiene ninguna comunicación de red</p>
+                
+                <h2 class="section-title scrollmargin" id="transparency-analysis">10. Características</h2>
+                <p style="margin-bottom: 1rem;">Rechaza las conclusiones vagas del análisis de IA y la inexplicabilidad, el proceso de cálculo del análisis es completamente transparente y explicable</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Transparencia de la hoja Process</h3>
+                        <p>Contiene la lógica y algoritmos de generación de gráficos Bridge y datos, cada paso de cálculo puede ser rastreado y verificado.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('transparency-example')">Ver comparación de transparencia</button>
+                        <div id="transparency-example" class="example-content">
+                            <p><strong>Análisis de caja negra tradicional:</strong></p>
+                            <p>❌ "El modelo de IA muestra una caída de margen de beneficio de 7pt"</p>
+                            <p>❌ No puede explicar el proceso de cálculo específico</p>
+                            <p>❌ No puede verificar la precisión de los resultados</p>
+                            <p><strong>Análisis transparente:</strong></p>
+                            <p>✅ "Factor precio: -3pt, factor costo: -2pt, factor cantidad: -2pt"</p>
+                            <p>✅ Cada paso de cálculo visible en la hoja Process</p>
+                            <p>✅ Todas las fórmulas y lógica completamente verificables</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Seguridad de datos locales</h3>
+                        <p>Cero comunicación de red, todo el procesamiento de datos se completa localmente, garantizando la seguridad absoluta de los datos empresariales.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('security-example')">Ver características de seguridad</button>
+                        <div id="security-example" class="example-content">
+                            <p><strong>Garantía de seguridad de datos:</strong></p>
+                            <p>✅ Los datos no salen de la computadora local</p>
+                            <p>✅ No necesita cargar a servidores en la nube</p>
+                            <p>✅ Sin requisitos de conexión de red</p>
+                            <p>✅ Cumple con las políticas de seguridad de datos empresariales</p>
+                            <p>✅ Evita riesgos de filtración de datos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Cálculo matemático preciso</h3>
+                        <p>Basado en fórmulas matemáticas rigurosas, garantizando la precisión y confiabilidad de los resultados del análisis.</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('accuracy-example')">Ver ejemplo de precisión</button>
+                        <div id="accuracy-example" class="example-content">
+                            <p><strong>Análisis de estimación tradicional:</strong></p>
+                            <p>❌ Estimación manual, posibilidad de errores</p>
+                            <p>❌ El impacto de cada factor no puede cuantificarse con precisión</p>
+                            <p>❌ Los resultados agregados requieren ajuste manual</p>
+                            <p><strong>Cálculo preciso:</strong></p>
+                            <p>✅ Las fórmulas matemáticas garantizan 100% de precisión</p>
+                            <p>✅ La contribución de cada factor es precisa hasta decimales</p>
+                            <p>✅ El total se equilibra automáticamente, sin necesidad de ajuste</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Análisis de alta eficiencia</h3>
+                        <p>Complete en minutos análisis complejos que tradicionalmente toman varios días, mejorando significativamente la eficiencia del trabajo.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Análisis multidimensional</h3>
+                        <p>Soporta análisis profundo de factores impulsores por producto, región, tiempo y otras dimensiones múltiples.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Configuración flexible</h3>
+                        <p>Ajuste las dimensiones de análisis y escenarios de comparación en cualquier momento, satisfaciendo diversas necesidades de análisis empresarial.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 JoySight - Herramienta de Análisis Inteligente de Datos. Próximamente disponible en Microsoft Store.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Función de ampliación de imágenes al hacer clic
+        document.addEventListener('DOMContentLoaded', function() {
+            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+            const closeButton = document.getElementById('closeButton');
+            
+            // Agregar evento de clic a todas las imágenes en step-screenshot
+            const images = document.querySelectorAll('.step-screenshot img');
+            images.forEach(function(img) {
+                img.addEventListener('click', function() {
+                    fullscreenImage.src = this.src;
+                    fullscreenImage.alt = this.alt;
+                    fullscreenOverlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden'; // Prevenir desplazamiento de fondo
+                });
+            });
+            
+            // Evento de clic del botón de cerrar
+            closeButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeFullscreen();
+            });
+            
+            // Hacer clic en el fondo para cerrar
+            fullscreenOverlay.addEventListener('click', function(e) {
+                if (e.target === fullscreenOverlay) {
+                    closeFullscreen();
+                }
+            });
+            
+            // Tecla ESC para cerrar
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
+                    closeFullscreen();
+                }
+            });
+            
+            function closeFullscreen() {
+                fullscreenOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Restaurar desplazamiento de fondo
+            }
+        });
+
+        function toggleExample(exampleId) {
+            const example = document.getElementById(exampleId);
+            const isVisible = example.classList.contains('show');
+            
+            // Ocultar todos los ejemplos primero
+            document.querySelectorAll('.example-content').forEach(content => {
+                content.classList.remove('show');
+            });
+            
+            // Mostrar el ejemplo clickeado si no estaba visible
+            if (!isVisible) {
+                example.classList.add('show');
+            }
+        }
+
+        // Desplazamiento suave para enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Agregar efecto de desplazamiento al encabezado
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoySight - インテリジェントデータ分析ツール</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header and Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .language-switch {
+            background: #667eea !important;
+            color: white !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .language-switch:hover {
+            background: #5a6fd8 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* Language Dropdown Styles */
+        .language-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-toggle:hover {
+            color: #555;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0 0 0;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            border: 1px solid #e9ecef;
+        }
+
+        .language-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: #333 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-menu a:hover {
+            background: #667eea !important;
+            color: white !important;
+        }
+
+        /* Mobile responsiveness for dropdown */
+        @media (max-width: 768px) {
+            .language-dropdown {
+                display: none;
+            }
+        }
+        
+        /* Main Content */
+        main {
+            background: white;
+            margin-top: 80px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem 0;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .hero-text {
+            text-align: left;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .cta-button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        .cta-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+        }
+        
+        .cta-primary:hover {
+            background: #3367d6;
+        }
+        
+        .cta-secondary {
+            background: #333;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cta-secondary:hover {
+            background: #555;
+        }
+        
+        .hero-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .preview-title {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .preview-placeholder {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .preview-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        /* Sections */
+        section {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #667eea;
+            margin: 1rem auto;
+        }
+        
+        /* Problem Section */
+        .problem-section {
+            background: #f8f9fa;
+        }
+        
+        .dialogue {
+            background: white;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .speaker {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .internal-thought {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 0;
+            font-style: italic;
+            border-radius: 10px;
+        }
+        
+        /* Instructions Section */
+        .instructions {
+            background: white;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .sub-section {
+            margin: 1.5rem 0;
+            padding-left: 0;
+        }
+        
+        .sub-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1.5rem 0 0.8rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid #667eea;
+        }
+        
+        .sub-content {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .detail-item {
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+        }
+        
+        .detail-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-description {
+            margin-left: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .data-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .data-type-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .data-type-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-type-title {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Example Buttons */
+        .example-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem 0;
+            transition: background 0.3s ease;
+        }
+        
+        .example-btn:hover {
+            background: #218838;
+        }
+        
+        .example-content {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 5px;
+        }
+        
+        .example-content.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 200px;
+            }
+        }
+        
+        /* Rules Section */
+        .rules-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .rules-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .rules-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .rules-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .rules-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* Features Section */
+        .features {
+            background: #f8f9fa;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .data-types {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 画像サイズ制御 */
+        /* コンテナの最大幅を制限し、大画面で中央配置 */
+        .step-screenshot { max-width: 1000px; margin: 1rem 0; }
+        /* 画像は常にコンテナを超えず、比率を保持 */
+        .step-screenshot img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .step-screenshot img:hover {
+            transform: scale(1.02);
+        }
+
+        /* 特定の画像に最大幅を設定 */
+        img.picture_max_width {
+        max-width: 600px;
+        }
+
+        /* 特定の画像に最大幅を設定 */
+        img.picture_max_width_400 {
+        max-width: 400px;
+        }
+        
+        /* フルスクリーン画像ビューアスタイル */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+        
+        .fullscreen-image {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            transition: color 0.3s ease;
+        }
+        
+        .close-button:hover {
+            color: #ccc;
+        }
+
+        .scrollmargin {
+        scroll-margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- フルスクリーン画像ビューア -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <span class="close-button" id="closeButton">&times;</span>
+        <img class="fullscreen-image" id="fullscreenImage" src="" alt="">
+    </div>
+    <header>
+        <nav class="container">
+            <div class="logo" id = "error-workbook-path-mismatch"
+            id = "error-excel-instance"
+            id = "error-workbook-open"
+            id = "error-worksheet-missing"
+            id = "error-data-copy"
+            id = "error-bridge-data-clear"
+            id = "error-worksheet-selection"
+            id = "error-excel-settings-restore"
+            id = "error-worksheet-restoration"
+            id = "error-screen-updating"
+            id = "error-interactive-restore"
+            id = "error-formula-parsing"
+            id = "error-variable-processing"
+            id = "error-pivot-table"
+            id = "error-data-range"
+            id = "error-cell-reference"
+            id = "error-range-values"
+            id = "error-worksheet-hide"
+            id = "error-worksheet-delete"
+            id = "error-worksheet-create"
+            id = "error-worksheet-copy"
+            id = "error-pastespecial" 
+            id = "error-refresh-bridge-general"
+            id = "error-refresh-bridge-data"
+            id = "error-refresh-bridge-process"
+            id = "error-general-exception"
+            id = "error-com-object-release"
+            id = "error-memory-cleanup"
+            id = "error-drop-list-create"
+
+            >JoySight</div>
+            <ul class="nav-links">
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#problem">問題シナリオ</a></li>
+                <li><a href="#instructions">使用方法</a></li>
+                <li><a href="#data-worksheet">データタイプ</a></li>
+                <li><a href="#rules">演算ルール</a></li>
+                <li><a href="#process">計算ロジック</a></li>
+                <li><a href="#transparency-analysis">機能特徴</a></li>
+                <li class="language-dropdown">
+                    <div class="dropdown-toggle">
+                        <span>Language</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="../index.html">English</a></li>
+                        <li><a href="../zh/index.html">中文</a></li>
+                        <li><a href="index.html">日本語</a></li>
+                        <li><a href="../es/index.html">Español</a></li>
+                        <li><a href="../fr/index.html">Français</a></li>
+                        <li><a href="../pt/index.html">Português</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero scrollmargin">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>JoySight – 財務、マーケティング、ビッグデータなど様々な分析領域で主要な推進要因を自動的に発見</h1>
+                        <p class="subtitle">数分でブレークダウンを完了し、Bridge分析と貢献度分析を生成、透明で追跡可能なプロセス。</p>
+                        <div class="cta-buttons">
+                            <a href="#instructions" class="cta-button cta-primary">使用開始</a>
+                            <a href="#problem" class="cta-button cta-primary">事例紹介</a>
+                            <a href="#" class="cta-button cta-secondary">
+                                <span>🏪</span> Microsoft Store ダウンロード
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-preview">
+                        <div class="preview-title">Bridge & Contribution プレビュー / Preview</div>
+                        <div class="preview-placeholder">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                            <div>Bridgeチャートプレビューエリア</div>
+                        </div>
+                        <div class="preview-note">上図はプレースホルダーです。スクリーンショットやアニメーションに置き換えることができます。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section id="problem" class="problem-section">
+            <div class="container">
+                <h2 class="section-title">事例紹介</h2>
+                
+                <div class="dialogue">
+                    <div class="speaker">以下のような問題によく遭遇しませんか？</div>
+                    
+                    <div class="conversation">
+                        <div class="speaker">上司:</div>
+                        <p>この数四半期の利益率の状況はどうですか？</p>
+                        
+                        <div class="speaker">あなた:</div>
+                        <p>売上は10%増加しましたが、利益率は全体で7pt低下しました。</p>
+                        
+                        <div class="speaker">上司:</div>
+                        <p>それは良くありませんね。利益率7pt低下のブレークダウンと分析レポートをもらえますか？具体的にどの製品、何の原因でこの低下が起こったのか知りたいです。地域別、製品タイプ別、チャネル別、チーム別など他の次元でも包括的な分析をして、昨年、一昨年、予算など異なる時期と比較してください。これにより、問題を迅速に発見し、即座に解決できます。</p>
+                        
+                        <div class="internal-thought">
+                            <div class="speaker">あなた（心の声）:</div>
+                            <p>売上分析なら簡単ですが、利益率7ptの低下を具体的な1000のSKUにブレークダウンし、価格、割引率、コストなどのどの要因がどれだけ全体の低下に貢献したかを知るのは容易ではありません。さらに地域、製品タイプ、チャネル別に分け、昨年、予算など異なるデータと比較するとなると、さらに複雑で、ほぼ不可能です...</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <p><strong>上記のような要求は仕事で頻繁に遭遇しませんか？</strong>このような分析に一日、数日間、またはそれ以上（異なる次元の分析）の時間を費やして結論を得ているでしょうか？この分析には大量の手作業での推定が含まれ、最終的にすべての影響要因を合計した利益率低下は正確な7ptではなく、手作業で調整する必要があり、計算プロセスが100%正しいかどうか確信が持てないという疑念を抱いているでしょうか？</p>
+                        
+                        <p><strong>JoySightをご利用ください。数分でこのような分析を完了</strong>し、アルゴリズムによって正確な分析結果を得て、収入、利益率の変化などを希望する影響要因、異なる次元、異なるシナリオ比較にブレークダウンします。問題の所在を正確に見つけ、迅速な行動を取り、企業の競争力を向上させます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section id="instructions" class="instructions">
+            <div class="container">
+                <h2 class="section-title">使用方法</h2>
+                <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">JoySightツールを使用するにはExcel 2016以上がプリインストールされている必要があります。最新版Microsoft 365の使用を推奨します。古いバージョンではプログラムが正常に動作しない場合があります。</p>
+                <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">以下の説明では「模擬スーパーマーケット」の仮想データセットを使用して、JoySightツールを使用してBridge分析を自動生成し、主要な推進要因を得る方法を実演します。</p>
+                <a href="../assets/Test.xlsx" download>Excel サンプルをダウンロード</a>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>初期パネル操作</strong>
+                    <p>初期パネルには「新規Bridgeファイル」と「既存Bridgeファイルを開く」の2つのボタンが表示されます</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/1.1_Initial_Panel.png" alt="新規Bridgeファイルクリック後のインターフェーススクリーンショット">
+                    </figure>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p><strong>1.1</strong>「新規Bridgeファイル」ボタンをクリック - 新しい「Data」ワークシートを含む新しいexcelファイルを生成します。「Data」ワークシートに対応するデータを入力し、これを基にさらなる分析を行います。</p>
+                    </div>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p><strong>1.2</strong>「既存Bridgeファイルを開く」ボタンをクリック - 以前に使用されたExcelファイルを選択します。このファイルは対応するデータを保存し、Data Typeが設定されている必要があります。</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong class="sub-title scrollmargin" id="data-worksheet">Dataワークシート</strong>
+                    <p>Dataワークシートの列B以降で、1行目に<a href="#data-type-selection">データタイプ</a>、2行目に<a href="#file-name-input">フィールド名</a>、3行目以降に<a href="#data-input">データ</a>を入力してください。列Aは自動生成された1行目から3行目のデータ入力の識別説明で、列A自体はデータと分析に影響しません。</p>
+                    <figure class="step-screenshot">
+                        <img src="../images/2_Data_Worksheet.png" alt="Dataワークシート">
+                    </figure>
+
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="data-type-selection">2.1 データタイプ選択</div>
+                        <div class="sub-content">
+                            <p>「Data」ワークシートの1行目に生成されるドロップダウンメニューから、列B以降でデータのタイプを選択してください。タイプはデータが表現する意味によって決定されます。プログラムはデータのタイプに基づいて自動分析を実行します。</p>
+                            
+                            <p>データのタイプは5種類に分かれます：<a href="#dimension">Dimension</a>、<a href="#key">Key</a>、<a href="#sumy">SumY</a>、<a href="#sumn">SumN</a>、<a href="#result">Result</a>。各フィールドは1つのデータタイプを定義する必要があります。ドロップダウンメニューを使用してデータタイプを選択できます。</p>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1_Data_Type_Select.png" alt="データタイプを選択">
+                            </figure>
+                            <p>模擬スーパーマーケットのデータを例にして、各データタイプの意味を説明します。各タイプの定義は以下の通りです：</p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="dimension">2.1.1 Dimension</div>
+                            <div class="detail-description">
+                                データの次元を表します。例：日付、時間、地域などのデータの次元とスライス。これらのフィールドは計算に参加せず、データのフィルタリングのみに使用されます。
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.1_Dimension.png" alt="データタイプを選択">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="key">2.1.2 Key</div>
+                            <div class="detail-description">
+                                KeyはDimensionの一種で、1つのフィールドのみがKeyとして指定できます。Keyとして指定されたフィールドは分析の最小粒度となり、この次元で各要因が最終結果(Result)に与える影響を計算します。他のdimensionをKeyフィールドに変更することで、異なる粒度での分析が可能です。
+                                <br><br>
+                                <strong>例：</strong>「Product Name」をKeyとして選択すると、プログラムは各変数の「Product Name」次元での変化が最終結果(Result)に与える影響を計算します。
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.2_Key.png" alt="データタイプを選択">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="sumy">2.1.3 SumY</div>
+                            <div class="detail-description">
+                                同じ列のフィールドの異なる行間でのデータが加算可能で、合計後のデータに意味があるもの。SumYまたはSumNの正しい設定は最終分析結果に影響します。
+                                <br><br>
+                                <strong>例：</strong>各行の異なる商品のQuantityは合計可能で、合計後の意味は総商品数量となります。したがってQuantityのTypeはSumYに設定できます。
+                                <br><br>
+                                SumYには数値を直接入力するか、他のフィールドを通じて数値を計算する数式を使用できます。ただし数式ではExcel数式の加減乗除四則演算記号と括弧のみ使用できます：加算+、減算-、乗算*、除算/、左括弧「(」、右括弧「)」。<a href="#formula-usage-tips">数式使用注意事項</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.3_SumY.png" alt="データタイプを選択">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="sumn">2.1.4 SumN</div>
+                            <div class="detail-description">
+                                同じ列のフィールドの異なる行間でのデータが加算不可能で、合計後のデータに意味がないもの。SumYまたはSumNの正しい設定は最終分析結果に影響します。
+                                <br><br>
+                                <strong>例：</strong>異なる商品のPriceは異なり、すべての商品の平均Priceを計算する場合、商品AのPriceと商品BのPriceを直接足して全体のPriceを得ることはできません。したがってPriceのTypeはSumNに設定できます。
+                                <br><br>
+                                SumNには数値を直接入力するか、他のフィールドを通じて数値を計算する数式を使用できます。ただし数式ではExcel数式の加減乗除四則演算記号と括弧のみ使用できます：加算+、減算-、乗算*、除算/、左括弧「(」、右括弧「)」。<a href="#formula-usage-tips">数式使用注意事項</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.4_SumN.png" alt="データタイプを選択">
+                            </figure>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-title scrollmargin" id="result">2.1.5 Result</div>
+                            <div class="detail-description">
+                                分析が必要なデータ結果として1つのフィールドのみがResultとして選択できます。Resultの列には必ず数式を入力し、他の変数を通じてResultフィールドを計算します。
+                                <br><br>
+                                <strong>例：</strong>Resultフィールドの内容がsalesの場合、セルに = Price * Quantity を入力する必要があります。または margin% の場合、セルに =profit / revenue を入力します。
+                                <br><br>
+                                Resultの数式は変数と結果を関連付け、分析ロジック依存の重要な情報です。各行のResultセルにResultを計算できる数式が含まれていることを確認し、数式は簡潔で明確である必要があります。Resultは数式内の各変数がResultに与える影響を分析し、数式にない変数は分析範囲外となります。Result数式には少なくとも1つのData TypeがSumYのフィールドが含まれている必要があります。これにより異なる行のデータを統合分析できます。
+                                <br><br>
+                                Result数式ではExcel数式の加減乗除四則演算記号と括弧のみ使用できます：加算+、減算-、乗算*、除算/、左括弧「(」、右括弧「)」。<a href="#formula-usage-tips">数式使用注意事項</a>
+                            </div>
+                            <figure class="step-screenshot">
+                                <img src="../images/2.1.5_Result.png" alt="データタイプを選択">
+                            </figure>
+                        </div>
+                    </div>
+
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="file-name-input">2.2 フィールド名設定</div>
+                        <div class="sub-content">
+                            <p>「Data」ワークシートの列B以降の2行目にフィールド名を入力します。フィールド名が表すデータの意味は1行目の<a href="#data-type-selection">データタイプ</a>に対応している必要があります。フィールド名は重複できません。</p>
+                        </div>
+                        <figure class="step-screenshot">
+                            <img src="../images/2.2_Field_Name.png" alt="データタイプを選択">
+                        </figure>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <div class="sub-title scrollmargin" id="data-input">2.3 データ入力</div>
+                        <div class="sub-content">
+                            <p>「Bridge Data」ワークシートの列Bの3行目以降に具体的なデータを入力します。</p>
+                        </div>
+                    </div>
+                    <figure class="step-screenshot">
+                        <img src="../images/2.3_Data_Input.png" alt="データタイプを選択">
+                    </figure>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Bridgeボタン操作</strong>
+                    <p>「New Bridge File」または「Select Bridge File」をクリックしてファイルを開くと、パネルに青色のボタン<a href="#new-bridge">New Bridge</a>と<a href="#refresh-bridge">Refresh Bridge</a>が表示されます。</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/3_Bridge_Button.png" alt="新規Bridgeファイルクリック後のインターフェーススクリーンショット">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>3.1</strong> <a class="sub-title scrollmargin" id="new-bridge">New Bridge</a>ボタンは、ワークシートDataのデータに基づいて新しい<a href="#dropdown-menu">ドロップダウンメニュー</a>とBridgeワークシートなどの分析フレームワークを生成し、後でデータを分析できるようにします。（注意：元のworkbookにBridgeワークシートなどの関連ワークシートと対応するデータがある場合は削除されます。）Dataワークシートのデータに変更がある場合は、まず「New Bridge」ボタンを押して新しい分析フレームワークを生成してから：1.新しいBaselineとComparisonのドロップダウンメニューを選択；2.「Refresh Bridge」ボタンを押して、必要なBridgeチャートとContribution Analysis分析を再生成します。</p>
+                    </div>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">                       
+                        <p><strong>3.2</strong> <a class="sub-title scrollmargin" id="refresh-bridge">Refresh Bridge</a>ボタン - 分析ニーズに応じて<a href="#base-dropdown-menu">Baseline</a>と<a href="#target-dropdown-menu">Comparison</a>のドロップダウンメニューのオプションを選択した後、「Refresh Bridge」ボタンを押して、必要なBridgeチャートとContribution Analysis分析を生成します。データまたはワークシートが不足している場合は提示が表示され、New Bridgeをクリックして新しいBridgeを再生成することを推奨します。</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong class="sub-title scrollmargin" id="dropdown-menu">ドロップダウンメニュー</strong>
+                    <p>ドロップダウンメニューは<a href="#base-dropdown-menu">Baseline</a>と<a href="#target-dropdown-menu">Comparison</a>の2つの領域に分かれます</p>
+                    <p>BaselineとComparisonのドロップダウンメニューの各フィールドに含まれるオプションは完全に同じです。ユーザーはニーズに応じてドロップダウンメニューでどのオプションをBaselineデータ、どのオプションをComparisonデータとしてフィルタリングするかを選択でき、これをBridge両端の比較・分析データとします。注意：初期状態では、BaselineとComparisonのドロップダウンメニューのフィールドはすべて選択されているため、BaselineとComparisonは完全に同じデータセットを取得し、差異のないBridgeが得られます。</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/4_Dropdown_List.png" alt="データタイプを選択">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>4.1</strong> <a class="sub-title scrollmargin" id="base-dropdown-menu">Baseline</a>ドロップダウンメニュー - 分析比較の基準データを選択します。例えば、ある年のデータを比較の基準とする場合は、ここで2023年を選択します</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/4.1_Dropdown_List_Base.png" alt="データタイプを選択">
+                        </figure>
+                        <p><strong>4.2</strong> <a class="sub-title scrollmargin" id="target-dropdown-menu">Comparison</a>ドロップダウンメニュー - 分析比較の対象データを選択します。例えば、ここで2024年を興味のある年として選択し、2023年と比較します。</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/4.2_Dropdown_List_Target.png" alt="データタイプを選択">
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Bridge ワークシート</strong>
+                    <p>Bridgeワークシートは最終分析結果を表示するワークシートで、BridgeチャートとContribution Analysis表を含みます</p>
+                    <figure class="step-screenshot">
+                        <img class="picture_max_width" src="../images/5_Bridge_WorkSheet.png" alt="データタイプを選択">
+                    </figure>
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>5.1</strong> Bridge データソース - 左上のセルB3から、フィールド名とデータが表示されます。これはBridgeチャート生成に使用されるデータです。</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width_400" src="../images/5.1_Bridge_DataSource.png" alt="データタイプを選択">
+                        </figure>
+                        <p><strong class="sub-title scrollmargin" id="Bridge_Chart" >5.2</strong> Bridgeチャート - プログラム実行後の分析で得られたBridgeを表示します。左の青い棒はBaseline、中央は各変数の貢献影響、右の棒チャートはComparisonです。</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/5.2_Bridge_Chart.png" alt="データタイプを選択">
+                        </figure>
+                        <p><strong class="sub-title scrollmargin" id="Contribution_Analysis">5.3</strong> Contribution Analysis 表 - Bridgeチャートの直下に、Contribution Analysis表が表示されます。Keyフィールドの各アイテムが異なる要因で全体の変化に対する貢献を示します。</p>
+                        <figure class="step-screenshot">
+                            <img class="picture_max_width" src="../images/5.3_Contribution Analysis_Table.png" alt="データタイプを選択">
+                        </figure>
+                        <p><a href="#Bridge_Chart">Bridgeチャート</a>と<a href="#Contribution_Analysis">Contribution Analysis表</a>により、変化に影響する最も重要なアイテム（SKU）および変化の要因（価格？コスト？それとも数量ミックス？）を迅速に見つけることができます</p>
+                        <br>
+                        <p><a href="#data-type-selection">2.1 データタイプ選択</a>で、どのフィールドがKey、どのフィールドがResultかを選択し、異なる次元、異なるresultデータを分析できます。また、3のドロップダウンメニューに基づいて、どのデータをBaselineとComparison用にフィルタリングするかを選択し、<a href="#refresh-bridge">Refresh Bridge</a>をクリックして更新されたBridgeチャートとContribution Analysis表を生成し、実際のビジネス状況を分析して改善提案を行います</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules Section -->
+        <section id="rules" class="instructions">
+            <div class="container">
+                <h2 class="section-title">6.SumY と SumN 演算ルール</h2>
+                
+                <p style="margin-bottom: 2rem;"><a href="#data-worksheet">Dataワークシート</a>の1行目<a href="#data-type-selection">Data Type</a>で、数値は<a href="#sumy">SumY </a>と<a href="#sumn">SumN</a>の2つのタイプに分けられ、<a href="#result">Result</a>列に数式を含んでこれらのデータを使用します。データを正しく分析するため、ここではSumYとSumNに関する演算ルールを定義します：</p>
+                
+                <div class="step">
+                    <span class="step-number">6.1</span>
+                    <strong>加法（減法）</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY + SumY = SumY</p>
+                        <p>SumY + SumN (エラーが表示されます）</p>
+                        <p>SumN + SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.2</span>
+                    <strong>乗法</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY * SumY = SumY</p>
+                        <p>SumY * SumN = SumY</p>
+                        <p>SumN * SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.3</span>
+                    <strong>除法</strong>
+                    <div style="margin-left: 2rem; margin-top: 1rem;">
+                        <p>SumY / SumY = SumN</p>
+                        <p>SumY / SumN = SumY</p>
+                        <p>SumN / SumY = SumN</p>
+                        <p>SumN / SumN = SumN</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6.4</span>
+                    <strong class="scrollmargin" id="formula-usage-tips">数式の使用方法</strong>
+
+                    <div class="detail-item">
+                        <strong >数式使用注意事項：</strong>各SumY、SumN、Resultセルの数式は、同じワークシートの同じ行の他のデータのみ使用でき、数式に行をまたがるデータを含めることはできません。数式ではExcel数式の加減乗除四則演算記号と括弧のみ使用できます：加算+、減算-、乗算*、除算/、左括弧「(」、右括弧「)」。
+                        <br><br>
+                        <strong >各列で同じ数式を使用：</strong>プログラムは自動的に4行目の数式から固定セル記号「$」を除去してコピーし、列全体で数式が同じになるようにします。
+                    </div>
+
+                    <div style="margin-left: 1rem; margin-top: 1rem;">
+                        <p><strong>6.4.1</strong> 数式に括弧が含まれる場合、四則演算の規則に従って括弧内のデータを優先的に計算し、結果を値として上記のルールを適用して演算を続行します。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('bracket-example')">括弧演算の例を表示</button>
+                        <div id="bracket-example" class="example-content">
+                            <p><strong>例：</strong> (SumY + SumY) * SumN</p>
+                            <p>ステップ1：SumY + SumY = SumY</p>
+                            <p>ステップ2：SumY * SumN = SumY</p>
+                            <p>最終結果タイプ：SumY</p>
+                        </div>
+                        
+                        <p><strong>6.4.2</strong> Resultの列の数式が他のセルを参照し、そのセルも数式を含む場合、分析はすべての参照ネスト数式を1つの数式に統合して分析します。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('nested-example')">ネスト数式の例を表示</button>
+                        <div id="nested-example" class="example-content">
+                            <p><strong>例：</strong></p>
+                            <p>E列数式：=B*C （Total Cost = Quantity * Unit Cost）</p>
+                            <p>F列Result数式：=D-E （Profit = Revenue - Total Cost）</p>
+                            <p><strong>統合後：</strong>プログラムは =D-(B*C) を分析します</p>
+                        </div>
+                        
+                        <p><strong>6.4.3</strong> プログラムは数式の構造に基づいて、自動的に変数の再配列と乗法分配律を使用します。これはより良いデータ分析のためです。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('reorder-example')">変数再配列の例を表示</button>
+                        <div id="reorder-example" class="example-content">
+                            <p><strong>元の数式：</strong> =SumY*(SumN1 + SumN2)</p>
+                            <p><strong>プログラム処理後：</strong> =SumY*SumN1 + SumY*SumN2</p>
+                            <p>これによりSumY、SumN1、SumN2それぞれの貢献をより明確に分析できます。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section id="process" class="instructions">
+            <div class="container">
+                <h2 class="section-title">7. Process ワークシート</h2>
+                
+                <p style="margin-bottom: 2rem;">Processワークシートには、Bridgeチャートとデータ生成のロジックとアルゴリズムが含まれており、これらの分析結果がどのようにステップごとに計算されるかを直感的に見ることができ、ブラックボックスや説明不可能な現象を回避します。</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>Bridge 分析計算ロジックと原理</strong></p>
+                
+                <div class="step">
+                    <span class="step-number">7.1</span>
+                    <strong>基本計算ステップ</strong>
+                    <p>すべての変数はBaseline初期値に基づき、各ステップで1つの変数をComparisonの値に変更し、各Keyアイテムへの影響を計算します。</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('step-by-step-example')">ステップ計算の例を表示</button>
+                    <div id="step-by-step-example" class="example-content">
+                        <p><strong>例：</strong>製品Aの売上分析</p>
+                        <p><strong>Baseline:</strong> Price=10, Quantity=100, Sales=1000</p>
+                        <p><strong>Comparison:</strong> Price=12, Quantity=80, Sales=960</p>
+                        <p><strong>ステップ1:</strong> Priceのみ変更：10→12, Quantityは100を維持, Sales=1200</p>
+                        <p><strong>ステップ2:</strong> 次にQuantityを変更：Price=12, Quantity=100→80, Sales=960</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.2</span>
+                    <strong>統合影響計算</strong>
+                    <p>各ステップでの変数変更による統合への影響を計算</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('summary-impact-example')">統合影響の例を表示</button>
+                    <div id="summary-impact-example" class="example-content">
+                        <p><strong>Price影響：</strong> 1200 - 1000 = +200</p>
+                        <p><strong>Quantity影響：</strong> 960 - 1200 = -240</p>
+                        <p><strong>総変化：</strong> +200 + (-240) = -40</p>
+                        <p><strong>検証：</strong> 960 - 1000 = -40 ✓</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.3</span>
+                    <strong>Bridgeチャート生成</strong>
+                    <p>7.1から7.2を経て、すべての変数をBaselineの値からComparisonの値に置き換えることで、Bridgeチャートに必要な各影響要因のimpactを取得します。</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.4</span>
+                    <strong>Contribution分析</strong>
+                    <p>Contribution計算表では、各Keyの各factor変化での全体への影響を計算します。</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('contribution-example')">Contribution分析の例を表示</button>
+                    <div id="contribution-example" class="example-content">
+                        <p><strong>全体Price影響：</strong> +500</p>
+                        <p><strong>製品A貢献：</strong> +200 (40%を占める)</p>
+                        <p><strong>製品B貢献：</strong> +180 (36%を占める)</p>
+                        <p><strong>製品C貢献：</strong> +120 (24%を占める)</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7.5</span>
+                    <strong>Added Data と Removed Data</strong>
+                    <p>Added DataはBaselineデータに新たに追加されたデータ（Comparisonデータに存在）を表し、Removed DataはBaselineデータから削除されたデータ（Comparisonに存在しない）を表します。この2種類のデータは通常、他のfactorの分析から分離する必要があります。</p>
+                    
+                    <button class="example-btn" onclick="toggleExample('add-remove-example')">Added/Removed Dataの例を表示</button>
+                    <div id="add-remove-example" class="example-content">
+                        <p><strong>シナリオ：</strong>製品組合せ変化分析</p>
+                        <p><strong>Baselineデータ：</strong>製品A, B, C</p>
+                        <p><strong>Comparisonデータ：</strong>製品A, B, D（Dを追加、Cを削除）</p>
+                        <p><strong>Added Data：</strong>製品Dの貢献</p>
+                        <p><strong>Removed Data：</strong>製品Cの影響（負の貢献）</p>
+                        <p>これらの変化は単独で表示され、価格、数量などの要因と混合されません。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Other Features Section -->
+        <section id="features" class="instructions">
+            <div class="container">
+                <h2 class="section-title">8. その他のワークシート</h2>
+                <p style="margin-bottom: 2rem;">プログラムの正常な動作のため、いくつかの他のワークシートが生成されますが非表示になります。これらのワークシートを変更しないでください。</p>
+                
+                <h2 class="section-title">9. データセキュリティ保障</h2>
+                <p style="margin-bottom: 2rem;">すべてのデータはローカルexcelにのみ存在し、プログラムもローカルでのみ実行されます。プログラム分析自体にはネットワーク通信は一切ありません。</p>
+                
+                <h2 class="section-title scrollmargin" id="transparency-analysis">10. 透明で説明可能な分析</h2>
+                <p style="margin-bottom: 1rem;">AI分析の曖昧な結論と説明不可能性を拒絶し、分析計算プロセスは完全に透明で説明可能です</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Processワークシートの透明性</h3>
+                        <p>Bridgeチャートとデータ生成のロジックとアルゴリズムを含み、各計算ステップを追跡・検証可能です。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('transparency-example')">透明性の比較を表示</button>
+                        <div id="transparency-example" class="example-content">
+                            <p><strong>従来のブラックボックス分析：</strong></p>
+                            <p>❌ 「AIモデルは利益率7pt低下を表示」</p>
+                            <p>❌ 具体的な計算プロセスを説明できない</p>
+                            <p>❌ 結果の正確性を検証できない</p>
+                            <p><strong>透明分析：</strong></p>
+                            <p>✅ 「価格要因：-3pt, コスト要因：-2pt, 数量要因：-2pt」</p>
+                            <p>✅ 各計算ステップがProcessワークシートで確認可能</p>
+                            <p>✅ すべての数式とロジックが完全に検証可能</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>ローカルデータセキュリティ</h3>
+                        <p>ネットワーク通信ゼロ、すべてのデータ処理はローカルで完了し、企業データの絶対的な安全性を確保します。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('security-example')">セキュリティ機能を表示</button>
+                        <div id="security-example" class="example-content">
+                            <p><strong>データセキュリティ保障：</strong></p>
+                            <p>✅ データはローカルコンピューターから離れません</p>
+                            <p>✅ クラウドサーバーへのアップロードは不要</p>
+                            <p>✅ ネットワーク接続要件なし</p>
+                            <p>✅ 企業データセキュリティポリシーに適合</p>
+                            <p>✅ データ漏洩リスクを回避</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>精密数学計算</h3>
+                        <p>厳密な数学公式に基づき、分析結果の正確性と信頼性を確保します。</p>
+                        
+                        <button class="example-btn" onclick="toggleExample('accuracy-example')">精密性の例を表示</button>
+                        <div id="accuracy-example" class="example-content">
+                            <p><strong>従来の推定分析：</strong></p>
+                            <p>❌ 手作業推定で誤差の可能性</p>
+                            <p>❌ 各要因の影響を精密に定量化できない</p>
+                            <p>❌ 統合結果に手作業調整が必要</p>
+                            <p><strong>精密計算：</strong></p>
+                            <p>✅ 数学公式が100%の正確性を保証</p>
+                            <p>✅ 各要因の貢献を小数点まで精密化</p>
+                            <p>✅ 合計は自動的にバランスし、調整不要</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>高効率分析</h3>
+                        <p>従来数日かかる複雑な分析を数分で完了し、作業効率を大幅に向上させます。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>多次元分析</h3>
+                        <p>製品別、地域別、時間別など多次元での詳細な推進要因分析をサポートします。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3>柔軟な設定</h3>
+                        <p>いつでも分析次元と比較シナリオを調整でき、様々なビジネス分析ニーズに対応します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 JoySight - インテリジェントデータ分析ツール. Microsoft Storeで近日リリース予定.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 画像クリック拡大機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+            const closeButton = document.getElementById('closeButton');
+            
+            // すべてのstep-screenshot内の画像にクリックイベントを追加
+            const images = document.querySelectorAll('.step-screenshot img');
+            images.forEach(function(img) {
+                img.addEventListener('click', function() {
+                    fullscreenImage.src = this.src;
+                    fullscreenImage.alt = this.alt;
+                    fullscreenOverlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden'; // 背景スクロールを防ぐ
+                });
+            });
+            
+            // 閉じるボタンクリックイベント
+            closeButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeFullscreen();
+            });
+            
+            // 背景クリックで閉じる
+            fullscreenOverlay.addEventListener('click', function(e) {
+                if (e.target === fullscreenOverlay) {
+                    closeFullscreen();
+                }
+            });
+            
+            // ESCキーで閉じる
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
+                    closeFullscreen();
+                }
+            });
+            
+            function closeFullscreen() {
+                fullscreenOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto'; // 背景スクロールを復元
+            }
+        });
+
+        function toggleExample(exampleId) {
+            const example = document.getElementById(exampleId);
+            const isVisible = example.classList.contains('show');
+            
+            // すべての例をまず非表示にする
+            document.querySelectorAll('.example-content').forEach(content => {
+                content.classList.remove('show');
+            });
+            
+            // クリックされた例が表示されていない場合は表示する
+            if (!isVisible) {
+                example.classList.add('show');
+            }
+        }
+
+        // ナビゲーションリンクのスムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ヘッダーにスクロール効果を追加
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>
