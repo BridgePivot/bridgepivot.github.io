@@ -52,6 +52,7 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
         
         .nav-links a {
@@ -78,6 +79,85 @@
         .language-switch:hover {
             background: #5a6fd8 !important;
             transform: translateY(-2px) !important;
+        }
+
+        /* Language Dropdown Styles */
+        .language-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-toggle:hover {
+            color: #555;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .language-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0 0 0;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            border: 1px solid #e9ecef;
+        }
+
+        .language-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: #333 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-menu a:hover {
+            background: #667eea !important;
+            color: white !important;
+        }
+
+        /* Mobile responsiveness for dropdown */
+        @media (max-width: 768px) {
+            .language-dropdown {
+                display: none;
+            }
         }
         
         /* Main Content */
@@ -585,7 +665,20 @@
                 <li><a href="#rules">Calculation Rules</a></li>
                 <li><a href="#process">Calculation Logic</a></li>
                 <li><a href="#transparency-analysis">Features</a></li>
-                <!-- <li><a href="zh/index.html" class="language-switch">中文</a></li> -->
+                <li class="language-dropdown">
+                    <div class="dropdown-toggle">
+                        <span>Language</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="index.html">English</a></li>
+                        <li><a href="zh/index.html">中文</a></li>
+                        <li><a href="jp/index.html">日本語</a></li>
+                        <li><a href="es/index.html">Español</a></li>
+                        <li><a href="fr/index.html">Français</a></li>
+                        <li><a href="pt/index.html">Português</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </header>
